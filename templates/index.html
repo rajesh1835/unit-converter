@@ -75,6 +75,10 @@
             </table>
         </form>
 
+        {% if error %}
+            <div class="err-box" style="color: red; margin-top: 10px; font-weight: bold;">⚠️ {{ error }}</div>
+        {% endif %}
+
         {% if result %}
             <div class="res-box">Result: {{ result }}</div>
         {% endif %}
