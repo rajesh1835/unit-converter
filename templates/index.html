@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Web Unit Converter</title>
+    <style>
+      body { 
+            font-family: Arial, sans-serif; 
+            margin: 50px; 
+            background-color: lightgray; 
+        }
+        .container { 
+            max-width: 600px; 
+            background: white; 
+            padding: 25px; 
+            border-radius: 8px; 
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 20px; 
+        }
+        th, td { 
+            
+            padding: 12px; 
+            text-align: left; 
+        }
+        th { 
+            background-color: darkblue; 
+            color: white; 
+        }
+        .del-btn { 
+            background: none; 
+            border: none; 
+            color: red; 
+            font-weight: bold; 
+            cursor: pointer; 
+        }
+        legend{
+            font-size: 30px;
+            font-style: oblique;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <form method="POST">
+            <fieldset>
+            <legend>📊 Unit Converter Project</legend>
+            <table>
+                <tr>
+                    <td>
+                        <label>Select Conversion Type:</label>
+                        <select name="choice">
+                            <option value="1">1. KM -> M</option>
+                            <option value="2">2. M -> KM</option>
+                            <option value="3">3. G -> KG</option>
+                            <option value="4">4. KG -> G</option>
+                            <option value="5">5. IN -> CM</option>
+                            <option value="6">6. CM -> IN</option>
+                            <option value="7">7. C -> F</option>
+                            <option value="8">8. F -> C</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>Enter Numeric Value:</label>
+                        <input type="number" step="any" name="value" required placeholder="e.g., 10">
+                    </td>
+                </tr>
+                <tr>
+                    <td><button type="submit">Run Conversion</button></td>
+                </tr>
+            </fieldset>
+            </table>
+        </form>
+
+        {% if result %}
+            <div class="res-box">Result: {{ result }}</div>
+        {% endif %}
+
+        <p><a href="/history" style="color: #007bff; text-decoration: none;">🕒 View Saved Conversion History ➔</a></p>
+    </div>
+
+</body>
+</html>

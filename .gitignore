@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.env
+.venv
+venv/
+ENV/
+env/
+
+# Flask instance folder
+instance/
+
+# SQLite database files
+*.db
+*.sqlite3
+
+# Migrations
+*migrations/
+
+# PyCharm / VS Code
+.idea/
+.vscode/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Environment variables
+.env
+.env.*
+
+# Byte-compiled / optimized / DLL files
+*.pyd
+*.so
+*.dll
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Editor temporary files
+*~
+*.swp
+*.swo
