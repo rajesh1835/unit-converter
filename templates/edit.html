@@ -1,65 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Record</title>
-    <style>
-        
-        h2{
-            text-align: center;
-        }
-       
-        div{
-            display:flex;
-            justify-content:center;
-            align-items:top;
-            height:200px;
-            border: 3px solid black;
-            margin:0 auto;
-            width:350px;
-            border-radius: 20px;
-        
-        }
+{% extends "base.html" %}
 
-        table{
-            text-align:center;
-            border-spacing:15px;
-            margin-top: 20px;
-        }
+{% block title %}Edit Record - UnitConverter{% endblock %}
 
-    </style>
-</head>
-<body>
-    <h2>Edit Conversion</h2>
-    <div>
-        <form method="POST">
-            {% if error %}
-                <div style="color: red; font-weight: bold; margin-top: 10px; text-align: center;">⚠️ {{ error }}</div>
-            {% endif %}
-            <table align="center">
-                <tr>
-                    <td>
-                        <label>Input:</label>
-                        <input type="text" value="{{ record.input_value }}" readonly>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>Update Result:</label>
-                        <input
-                            type="text"
-                            name="updated_value"
-                            value="{{ current_val }}"
-                            required
-                            >
-                    </td>
-                </tr>
-                <tr>
-                    <td><button type="submit">Update</button></td>
-                </tr>
-            </table>
-        </form>
+{% block content %}
+<div class="glass-card" style="max-width: 500px;">
+    <div class="back-bar">
+        <a href="/history" class="btn-secondary">
+            <svg viewBox="0 0 24 24">
+                <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/>
+            </svg>
+            Back to History
+        </a>
     </div>
-</body>
-</html>
+
+    <h2>✏️ Edit Conversion Record</h2>
+
+    <!-- Error Block -->
+    {% if error %}
+        <div class="err-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <!-- Form -->
+    <form method="POST">
+        <!-- Readonly Current Source String -->
+        <div class="input-group">
+            <label>Original Input</label>
+            <input type="text" value="{{ record.input_value }}" class="input-field" readonly>
+        </div>
+
+        <!-- Numeric input field to modify value -->
+        <div class="input-group">
+            <label for="updated_value">New Numeric Value ({{ record.input_value.split()[-1] }})</label>
+            <input 
+                type="number" 
+                step="any"
+                name="updated_value" 
+                id="updated_value"
+                class="input-field" 
+                value="{{ current_val }}" 
+                required 
+                autocomplete="off"
+            >
+        </div>
+
+        <button type="submit" class="btn-primary" style="margin-top: 0.5rem;">Update Conversion</button>
+    </form>
+</div>
+{% endblock %}

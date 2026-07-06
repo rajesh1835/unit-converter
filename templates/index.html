@@ -1,90 +1,190 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Web Unit Converter</title>
-    <style>
-      body { 
-            font-family: Arial, sans-serif; 
-            margin: 50px; 
-            background-color: lightgray; 
-        }
-        .container { 
-            max-width: 600px; 
-            background: white; 
-            padding: 25px; 
-            border-radius: 8px; 
-        }
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 20px; 
-        }
-        th, td { 
-            
-            padding: 12px; 
-            text-align: left; 
-        }
-        th { 
-            background-color: darkblue; 
-            color: white; 
-        }
-        .del-btn { 
-            background: none; 
-            border: none; 
-            color: red; 
-            font-weight: bold; 
-            cursor: pointer; 
-        }
-        legend{
-            font-size: 30px;
-            font-style: oblique;
-        }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <form method="POST">
-            <fieldset>
-            <legend>📊 Unit Converter Project</legend>
-            <table>
-                <tr>
-                    <td>
-                        <label>Select Conversion Type:</label>
-                        <select name="choice">
-                            <option value="1">1. KM -> M</option>
-                            <option value="2">2. M -> KM</option>
-                            <option value="3">3. G -> KG</option>
-                            <option value="4">4. KG -> G</option>
-                            <option value="5">5. IN -> CM</option>
-                            <option value="6">6. CM -> IN</option>
-                            <option value="7">7. C -> F</option>
-                            <option value="8">8. F -> C</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>Enter Numeric Value:</label>
-                        <input type="number" step="any" name="value" required placeholder="e.g., 10">
-                    </td>
-                </tr>
-                <tr>
-                    <td><button type="submit">Run Conversion</button></td>
-                </tr>
-            </fieldset>
-            </table>
-        </form>
+{% extends "base.html" %}
 
-        {% if error %}
-            <div class="err-box" style="color: red; margin-top: 10px; font-weight: bold;">⚠️ {{ error }}</div>
-        {% endif %}
+{% block title %}Unit Converter{% endblock %}
 
-        {% if result %}
-            <div class="res-box">Result: {{ result }}</div>
-        {% endif %}
-
-        <p><a href="/history" style="color: #007bff; text-decoration: none;">🕒 View Saved Conversion History ➔</a></p>
+{% block content %}
+<div class="glass-card">
+    <h2>Supercharge Your Conversions</h2>
+    
+    <!-- Tab Controls -->
+    <div class="tabs-container">
+        <button type="button" class="tab-btn active" data-tab="length" id="tab-length">
+            <svg viewBox="0 0 24 24">
+                <path d="M17,5H7A3,3 0 0,0 4,8V16A3,3 0 0,0 7,19H17A3,3 0 0,0 20,16V8A3,3 0 0,0 17,5M17,17H7A1,1 0 0,1 6,16V14H8V12H6V10H10V12H8V14H12V12H10V10H14V12H12V14H16V12H14V10H18V16A1,1 0 0,1 17,17Z" />
+            </svg>
+            Length
+        </button>
+        <button type="button" class="tab-btn" data-tab="weight" id="tab-weight">
+            <svg viewBox="0 0 24 24">
+                <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z" />
+            </svg>
+            Weight
+        </button>
+        <button type="button" class="tab-btn" data-tab="height" id="tab-height">
+            <svg viewBox="0 0 24 24">
+                <path d="M2,21H22V23H2V21M10,2V19H8V2H10M16,2V19H14V2H16M6,2H18V4H6V2M6,17H18V19H6V17Z" />
+            </svg>
+            Height
+        </button>
+        <button type="button" class="tab-btn" data-tab="temp" id="tab-temp">
+            <svg viewBox="0 0 24 24">
+                <path d="M15,13V5A3,3 0 0,0 9,5V13A5,5 0 1,0 15,13M12,4A1,1 0 0,1 13,5V8H11V5A1,1 0 0,1 12,4Z" />
+            </svg>
+            Temp
+        </button>
     </div>
 
-</body>
-</html>
+    <!-- Error Block -->
+    {% if error %}
+        <div class="err-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <!-- Form -->
+    <form method="POST" id="convert-form">
+        <!-- Hidden Choice Input -->
+        <input type="hidden" name="choice" id="choice-input" value="1">
+
+        <!-- Dynamic Direction Cards per Category -->
+        <label>Select Direction</label>
+        
+        <!-- Length Directions -->
+        <div class="direction-container tab-content" id="content-length">
+            <div class="direction-card active" data-value="1">Kilometers ➔ Meters</div>
+            <div class="direction-card" data-value="2">Meters ➔ Kilometers</div>
+        </div>
+
+        <!-- Weight Directions -->
+        <div class="direction-container tab-content" id="content-weight" style="display: none;">
+            <div class="direction-card" data-value="3">Grams ➔ Kilograms</div>
+            <div class="direction-card" data-value="4">Kilograms ➔ Grams</div>
+        </div>
+
+        <!-- Height Directions -->
+        <div class="direction-container tab-content" id="content-height" style="display: none;">
+            <div class="direction-card" data-value="5">Inches ➔ Centimeters</div>
+            <div class="direction-card" data-value="6">Centimeters ➔ Inches</div>
+        </div>
+
+        <!-- Temp Directions -->
+        <div class="direction-container tab-content" id="content-temp" style="display: none;">
+            <div class="direction-card" data-value="7">Celsius ➔ Fahrenheit</div>
+            <div class="direction-card" data-value="8">Fahrenheit ➔ Celsius</div>
+        </div>
+
+        <!-- Input Field -->
+        <div class="input-group">
+            <label for="value-input">Enter Numeric Value</label>
+            <input type="number" step="any" name="value" id="value-input" class="input-field" placeholder="e.g. 42" required autocomplete="off">
+        </div>
+
+        <button type="submit" class="btn-primary">Run Conversion</button>
+    </form>
+
+    <!-- Result Banner -->
+    {% if result %}
+        <div class="res-box" id="result-box">
+            <span id="result-text">{{ result }}</span>
+            <button class="copy-btn" id="copy-button" title="Copy to clipboard">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/>
+                </svg>
+            </button>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const tabs = document.querySelectorAll(".tab-btn");
+        const contents = document.querySelectorAll(".tab-content");
+        const choiceInput = document.getElementById("choice-input");
+        const copyButton = document.getElementById("copy-button");
+        
+        // Map choices to categories
+        const choiceToTabMap = {
+            "1": "length", "2": "length",
+            "3": "weight", "4": "weight",
+            "5": "height", "6": "height",
+            "7": "temp", "8": "temp"
+        };
+
+        // Switch to the correct tab and direction
+        const selectDirection = (choiceVal) => {
+            const tabName = choiceToTabMap[choiceVal] || "length";
+            
+            // Activate Tab Button
+            tabs.forEach(t => t.classList.remove("active"));
+            document.getElementById(`tab-${tabName}`).classList.add("active");
+
+            // Show Direction Cards Container
+            contents.forEach(c => c.style.display = "none");
+            const activeContainer = document.getElementById(`content-${tabName}`);
+            activeContainer.style.display = "grid";
+
+            // Activate Direction Card
+            const cards = activeContainer.querySelectorAll(".direction-card");
+            cards.forEach(card => {
+                if (card.dataset.value === choiceVal.toString()) {
+                    card.classList.add("active");
+                } else {
+                    card.classList.remove("active");
+                }
+            });
+
+            choiceInput.value = choiceVal;
+        };
+
+        // Click handler for Category Tabs
+        tabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+                const targetTab = tab.dataset.tab;
+                const container = document.getElementById(`content-${targetTab}`);
+                const firstCard = container.querySelector(".direction-card");
+                selectDirection(firstCard.dataset.value);
+            });
+        });
+
+        // Click handler for Direction Cards
+        document.querySelectorAll(".direction-card").forEach(card => {
+            card.addEventListener("click", () => {
+                const parent = card.closest(".direction-container");
+                parent.querySelectorAll(".direction-card").forEach(c => c.classList.remove("active"));
+                card.classList.add("active");
+                choiceInput.value = card.dataset.value;
+            });
+        });
+
+        // Set initial state from last request choice if exists, else default to 1
+        const initialChoice = "{{ request.form.get('choice', '1') }}";
+        selectDirection(initialChoice);
+
+        // Copy to Clipboard logic
+        if (copyButton) {
+            copyButton.addEventListener("click", () => {
+                const resultText = document.getElementById("result-text").innerText;
+                
+                // Copy logic using Navigator API
+                navigator.clipboard.writeText(resultText).then(() => {
+                    // Quick dynamic visual feedback
+                    const originalIcon = copyButton.innerHTML;
+                    copyButton.innerHTML = `<svg viewBox="0 0 24 24"><path fill="#10b981" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>`;
+                    setTimeout(() => {
+                        copyButton.innerHTML = originalIcon;
+                    }, 1500);
+                }).catch(err => {
+                    console.error("Failed to copy text: ", err);
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}
